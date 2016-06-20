@@ -1,10 +1,3 @@
-# image-matching
+# Image Matching Using Homography
 
-How to use this:
-
-```bash
-for f in $(find . -name "*.png"); do 
-  python image-matching.py -t <TEMPLATES> -q $f -v -p; 
-done
-```
-
+TBD
