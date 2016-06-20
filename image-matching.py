@@ -202,6 +202,7 @@ def main(argv=None):
       ## show result
       plt.imshow(out, 'gray')
       plt.show()
+      cv2.imwrite('img/matches.png', out)
 
 if __name__ == "__main__":
   sys.exit(main())
