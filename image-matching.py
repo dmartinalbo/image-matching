@@ -58,15 +58,14 @@ def knn_clasif(good_matches):
 def main(argv=None):
 
   try:
-    parser = argparse.ArgumentParser(description='Classifies (and geometrically corrects) an image between DNIv3 (head or tail).')
-    parser.add_argument('-t', dest='template_names', nargs='+', required=True, help='Image to be used as tail template')
-    parser.add_argument('-q', dest='query_names', nargs='+', required=True, help='Preprocessed image to query')
-    parser.add_argument('-c', dest='bbs', nargs='*', help='Bounding boxes to crop. (Format="WxH+X+Y).')
-    parser.add_argument('-n', dest='nn_ratio', type=float, default=0.85, help='Nearest neighbor matching ratio')
+    parser = argparse.ArgumentParser(description='Image Classification and Matching Using Local Features and Homography.')
+    parser.add_argument('-t', dest='template_names', nargs='+', required=True, help='List of template images')
+    parser.add_argument('-q', dest='query_names', nargs='+', required=True, help='List of query images')
+    parser.add_argument('-o', dest='output_path', help='Output directory', default='.')
+    parser.add_argument('-c', dest='bounding_boxes', nargs='*', help='Bounding boxes to crop. ("WxH+X+Y")')
     parser.add_argument('-v', dest='verbosity', action='store_true', help='Increase output verbosity')
-    parser.add_argument('-p', dest='photocopied', action='store_true', help='Use only if the image is scanned or photocopied. Do not with photos!')
-    parser.add_argument('--matches', dest='view_matches', action='store_true')
-    parser.add_argument('-o', dest='output_path', help='Output path', default='.')
+    parser.add_argument('-p', dest='photocopied', action='store_true', help='Use only if the image is scanned or photocopied, do not with photos!')
+    parser.add_argument('--matches', dest='view_matches', action='store_true', help="Shows the matching result and the good matches")
 
     parser.set_defaults(view_matches=False)
     parser.set_defaults(photocopied=False)
@@ -169,9 +168,9 @@ def main(argv=None):
     bn, ext = os.path.splitext(os.path.basename(name))
     # using M^{-1} we go from query coordinates to template coordinates.
     img_templ_coords = cv2.warpPerspective(img, np.linalg.inv(M), (w,h))
-    if args.bbs:
+    if args.bounding_boxes:
       cont_bbs = 0
-      for bb in args.bbs:
+      for bb in args.bounding_boxes:
         # parse bb string to variables
         width, height, x_ini, y_ini = (int(c) for c in bb.replace('x','+').split('+'))
         #
@@ -202,7 +201,6 @@ def main(argv=None):
       ## show result
       plt.imshow(out, 'gray')
       plt.show()
-      cv2.imwrite('img/matches.png', out)
 
 if __name__ == "__main__":
   sys.exit(main())
