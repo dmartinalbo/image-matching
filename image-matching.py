@@ -164,11 +164,12 @@ def main(argv=None):
       # retransform the rectangle with the new matrix
       dst = cv2.perspectiveTransform(pts,M)
     
-    # if bbs crop those areas
+    # if bounding boxes are provided and we only have one template
+    # crop those bounding boxes
     bn, ext = os.path.splitext(os.path.basename(name))
     # using M^{-1} we go from query coordinates to template coordinates.
     img_templ_coords = cv2.warpPerspective(img, np.linalg.inv(M), (w,h))
-    if args.bounding_boxes:
+    if len(args.template_names) == 1 and args.bounding_boxes:
       cont_bbs = 0
       for bb in args.bounding_boxes:
         # parse bb string to variables
@@ -182,6 +183,7 @@ def main(argv=None):
         logger.info('  Saved in {}/{}_crop_{}{}'.format(args.output_path, bn, cont_bbs, ext))
         cont_bbs += 1
     else:
+      logger.info('No crop. Saving all image in {}/{}_crop_{}{}'.format(args.output_path, bn, cont_bbs, ext))
       cv2.imwrite('{}/{}_fix{}'.format(args.output_path, bn, ext), img_templ_coords)
 
     if args.view_matches:
