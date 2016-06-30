@@ -183,7 +183,7 @@ def main(argv=None):
         logger.info('  Saved in {}/{}_crop_{}{}'.format(args.output_path, bn, cont_bbs, ext))
         cont_bbs += 1
     else:
-      logger.info('No crop. Saving all image in {}/{}_crop_{}{}'.format(args.output_path, bn, cont_bbs, ext))
+      logger.info('No crop. Saving full image in {}/{}_fix{}'.format(args.output_path, bn, ext))
       cv2.imwrite('{}/{}_fix{}'.format(args.output_path, bn, ext), img_templ_coords)
 
     if args.view_matches:
